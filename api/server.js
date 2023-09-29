@@ -10,22 +10,26 @@ function customMorgan(req, res, next) {
   next();
 }
 
-function shortCircuit (req, res, next) {
-  if (req.method === "GET") {
-    res.json("the request was short circuited!");
-  }
-  next();
+function shortCircuit(req, res, next) {
+  res.json("the request was short circuited!");
 }
+
+function addFriend(req, res, next) {
+  req.friend = "Jacob Peter Lang"
+  next(); 
+}
+// server.use(shortCircuit);
 
 server.use(express.json());
 server.use(morgan("dev"));
-server.use(customMorgan); 
-server.use(shortCircuit); 
+server.use(customMorgan);
+server.use(addFriend)
+
 server.use('/api/hubs', hubsRouter);
 
 server.get('/', (req, res) => {
   res.send(`
-    <h2>Hubs API</h2>
+    <h2>Hubs API ${req.friend}</h2>
     <p>Welcome to the Hubs API</p>
   `);
 });
